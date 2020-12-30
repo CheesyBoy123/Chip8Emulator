@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class Chip8 {
 	// This is our simulated processor speed (in Hz)
-	public static int PROCESSOR_SPEED = 2000;
+	public static int PROCESSOR_SPEED = 3000;
 
 	// Our bus
 	public Bus bus;
@@ -24,7 +24,7 @@ public class Chip8 {
 	short I_REGISTER = 0;
 	// 16-bit Stack pointer, points to somewhere on our RAM.
 	// We store it at the end of the RAM, 16 address spaces.
-	int STACK_POINTER = 4050;
+	int STACK_POINTER = 4047;
 	// 8-bit delay timer (decremented at a rate of 60Hz)
 	byte DELAY_TIMER = 60;
 	// 8-bit sound timer, functions like a delay timer; but is also meant to beep
@@ -160,8 +160,9 @@ public class Chip8 {
 				PC -= 2;
 
 		} else if (type == 41) {
-			int nibbleOffset = inst & 0xF;
-			I_REGISTER = (short) (50 + (5 * nibbleOffset));
+			int nibbleOffset = (inst & 0xF00) >> 8;
+			int ch = V_REGISTERS[nibbleOffset] & 0xF;
+			I_REGISTER = (short) (50 + (5 * ch));
 		} else if (type == 51) {
 
 			int val = V_REGISTERS[x] & 0xFF;
